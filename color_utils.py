@@ -12,7 +12,7 @@ def get_random_color():
 
 
 def validate_color(color):
-    return [k if k < 256 else 255 for k in [j if j > 0 else 0 for j in [round(i) for i in color]]]
+    return [k if k < 256 else 255 for k in [j if j > 0 else 0 for j in [int(round(i)) for i in color]]]
 
 
 def adjust_brightness(color, brightness: float):

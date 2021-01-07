@@ -2,7 +2,8 @@ from gc import collect
 from machine import Pin
 from utime import sleep_ms
 from neopixel import NeoPixel
-from color_utils import BLACK, get_random_color, validate_color
+from utils import flatten_nd_array
+from color_utils import BLACK, adjust_brightness, get_random_color, validate_color
 
 
 class PixelsNotReadyThrowable(Exception):
@@ -11,20 +12,32 @@ class PixelsNotReadyThrowable(Exception):
 
 
 class NeoRings(NeoPixel):
-    def __init__(self, pin_number: int, pixel_count: int, brightness: float = 1.,
+    def __init__(self, pin_number: int, rings: tuple, brightness: float = 1.,
                  auto_write: bool = False):
         # View the super class source:
         # https://github.com/micropython/micropython/blob/master/ports/esp32/modules/neopixel.py
-        super().__init__(pin=Pin(pin_number), n=pixel_count, bpp=3)
-        self.PIN_NUMBER = pin_number
-        self.PIXEL_COUNT = pixel_count
-        self.range = sorted(list(range(self.PIXEL_COUNT)))
+        self._rings = self._generate_ranges(rings)
+        self.range = flatten_nd_array(self._rings)
         self._range_backup = self.range.copy()
         self.is_enabled = True
         self.brightness = brightness
         self._auto_write = auto_write
         self._validate_args()
+        self._pin_number = pin_number
+        super().__init__(pin=Pin(self._pin_number), n=len(self.range), bpp=3)
         self.reset()
+
+    @staticmethod
+    def _generate_ranges(rings: tuple):
+        first, last = (0, 0)
+        reverse = False
+        out = []
+        for ring_length in rings:
+            last += ring_length
+            out.append(tuple(sorted(list(range(first, last)), reverse=reverse)))
+            first += ring_length
+            reverse = not reverse
+        return out
 
     def get_pixels(self):
         return {k: self.__getitem__(k) for k in self.range}
@@ -45,20 +58,21 @@ class NeoRings(NeoPixel):
         if self._auto_write:
             self.write()
 
-    def _get_color(self, color):
+    def __setitem__(self, index, color):
         if color == "random":
             color = get_random_color()
-        return validate_color([round(i * self.brightness) for i in color])
-
-    def __setitem__(self, index, color):
-        super().__setitem__(index, self._get_color(color))
+        if self.brightness < 1.:
+            c = adjust_brightness(color, brightness=self.brightness)
+        else:
+            c = validate_color(color)
+        super().__setitem__(index, c)
         self._apply()
 
     def __len__(self):
-        return self.PIXEL_COUNT
+        return self.n
 
     def __repr__(self):
-        return "NeoRings object with {} pixels on pin {}".format(self.PIXEL_COUNT, self.PIN_NUMBER)
+        return "NeoRings object with {} pixels on pin {}".format(len(self), self._pin_number)
 
     def fill(self, color, range_=()):
         if len(range_) == 0:

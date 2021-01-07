@@ -1,3 +1,16 @@
+
+def flatten(x):
+    for item in x:
+        try:
+            yield from flatten(item)
+        except TypeError:
+            yield item
+
+
+def flatten_nd_array(arr):
+    return list(flatten(arr))
+
+
 def load_string(file: str):
     with open(file=file, mode="r", encoding="utf-8") as f:
         s = f.read()
