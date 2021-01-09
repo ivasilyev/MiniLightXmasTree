@@ -16,8 +16,8 @@ class NeoRings(NeoPixel):
                  auto_write: bool = False):
         # View the super class source:
         # https://github.com/micropython/micropython/blob/master/ports/esp32/modules/neopixel.py
-        self._rings = self._generate_ranges(rings)
-        self.range = flatten_nd_array(self._rings)
+        self.rings = self._generate_ranges(rings)
+        self.range = flatten_nd_array(self.rings)
         self._range_backup = self.range.copy()
         self.is_enabled = True
         self.brightness = brightness
