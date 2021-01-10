@@ -114,8 +114,7 @@ class Animations:
                     self._pixels[idx] = background
                 self.pause(pause)
 
-    def centrifugal(self, colors, background=BLACK, reverse: bool = False, pause: int = 20,
-                    always_lit: bool = False):
+    def centrifugal(self, colors, reverse: bool = False, pause: int = 20):
         if reverse:
             _range = self._pixels.rings.copy()[::-1]
         else:
