@@ -119,8 +119,8 @@ class Animations:
             _range = self._pixels.rings.copy()[::-1]
         else:
             _range = self._pixels.rings.copy()
-        for color in colors:
-            for ring_range in _range:
+        for ring_range in _range:
+            for color in colors:
                 self._pixels.fill(color, ring_range)
                 self._pixels.write()
                 self.pause(pause)
