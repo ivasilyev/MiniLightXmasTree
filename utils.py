@@ -11,6 +11,10 @@ def flatten_nd_array(arr):
     return list(flatten(arr))
 
 
+def flatten_2d_array(arr):
+    return [j for i in arr for j in i]
+
+
 def load_string(file: str):
     with open(file=file, mode="r", encoding="utf-8") as f:
         s = f.read()

@@ -1,6 +1,7 @@
 from gc import collect
 from utime import sleep_ms
-from color_utils import BLACK
+from utils import flatten_2d_array
+from color_utils import BLACK, create_color_loop
 from neo_rings import NeoRings, PixelsNotReadyThrowable
 
 
@@ -119,11 +120,22 @@ class Animations:
             _range = self._pixels.rings.copy()[::-1]
         else:
             _range = self._pixels.rings.copy()
-        for ring_range in _range:
-            for color in colors:
+        for color in colors:
+            for ring_range in _range:
+                if not self.is_enabled:
+                    return
                 self._pixels.fill(color, ring_range)
-                self._pixels.write()
-                self.pause(pause)
+            self._pixels.write()
+            self.pause(pause)
+
+    def pulse(self, colors, pause: int = 20):
+        _colors = create_color_loop(flatten_2d_array([[i, BLACK] for i in colors]), steps=20)
+        for color in _colors:
+            if not self.is_enabled:
+                return
+            self._pixels.fill(color)
+            self._pixels.write()
+            self.pause(pause)
 
     def fade(self):
         for i in range(0, 4 * 256, 8):
