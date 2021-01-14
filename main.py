@@ -12,5 +12,5 @@ def main():
     animation_controller = AnimationController(animations)
     _thread.start_new_thread(animation_controller.run, ())
 
-    sensor_controller = SensorController(pin=14, polling_interval=1)
-    _thread.start_new_thread(sensor_controller.run, ())
+    # sensor_controller = SensorController(pin=14, polling_interval=1)
+    # _thread.start_new_thread(sensor_controller.run, ())
