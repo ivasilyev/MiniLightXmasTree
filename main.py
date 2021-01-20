@@ -14,3 +14,5 @@ def main():
 
     sensor_controller = SensorController(pin=14, polling_interval=1)
     _thread.start_new_thread(sensor_controller.run, ())
+
+    animation_controller.set_animation("random_blink", colors=("random",), pause=50)
