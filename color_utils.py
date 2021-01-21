@@ -1,3 +1,4 @@
+import math
 from random import choice
 
 BLACK = (0, ) * 3
@@ -19,33 +20,44 @@ def adjust_brightness(color, brightness: float):
     return validate_color([float(i) * brightness for i in color])
 
 
-def count_linspace(start, stop, count: int = 10):
-    if count <= 2:
+def count_linspace(start, stop, steps: int = 10):
+    if steps <= 2:
         return [start, stop]
     start = float(start)
     stop = float(stop)
     delta = stop - start
-    step = delta / (count - 1)
+    step = delta / (steps - 1)
     out = [start, ]
-    for ex in range(1, count - 1):
+    for ex in range(1, steps - 1):
         out.append(round(start + (ex * step), 2))
     out.append(stop)
     return out
 
 
-def mutate_color(start_color, stop_color, steps: int = 10):
+def get_linear_transitions(start_color, stop_color, steps: int = 10):
     linspaces = [count_linspace(i, j, steps) for i, j in zip(start_color, stop_color)]
     return [tuple([i[j] for i in linspaces]) for j in range(steps)]
 
 
-def create_color_loop(color_2d_array, steps: int = 10):
+def count_sines(start, stop, steps: int = 10):
+    coefficients = [(1 + math.cos(i / 100)) / 2
+                    for i in count_linspace(0, round(math.pi * 100), steps)]
+    return [round(start * i + stop * (1 - i)) for i in coefficients]
+
+
+def get_sine_transitions(start_color, stop_color, steps: int = 10):
+    linspaces = [count_sines(i, j, steps) for i, j in zip(start_color, stop_color)]
+    return [tuple([i[j] for i in linspaces]) for j in range(steps)]
+
+
+def get_color_loop(color_2d_array, steps: int = 10):
     out = []
     previous = None
     for color in color_2d_array:
         if previous:
-            out.extend(mutate_color(previous, color, steps)[:-1])
+            out.extend(get_sine_transitions(previous, color, steps)[:-1])
         previous = color
-    out.extend(mutate_color(color_2d_array[-1], color_2d_array[0], steps))
+    out.extend(get_sine_transitions(color_2d_array[-1], color_2d_array[0], steps))
     return out
 
 

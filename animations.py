@@ -1,7 +1,7 @@
 from gc import collect
 from utime import sleep_ms
 from utils import flatten_2d_array
-from color_utils import BLACK, create_color_loop
+from color_utils import BLACK, get_color_loop
 from neo_rings import NeoRings, PixelsNotReadyThrowable
 
 
@@ -129,7 +129,7 @@ class Animations:
             self.pause(pause)
 
     def pulse(self, colors, pause: int = 20):
-        _colors = create_color_loop(flatten_2d_array([[i, BLACK] for i in colors]), steps=20)
+        _colors = get_color_loop(flatten_2d_array([[i, BLACK] for i in colors]), steps=20)
         for color in _colors:
             if not self.is_enabled:
                 return
