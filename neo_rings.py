@@ -3,7 +3,7 @@ from machine import Pin
 from utime import sleep_ms
 from neopixel import NeoPixel
 from utils import flatten_nd_array
-from color_utils import BLACK, adjust_brightness, get_random_color, mutate_color, validate_color
+from color_utils import BLACK, adjust_brightness, get_random_color, get_sine_transitions, validate_color
 
 
 class PixelsNotReadyThrowable(Exception):
@@ -69,8 +69,8 @@ class NeoRings(NeoPixel):
         self._apply()
 
     def alter(self, index, next_color, steps: int = 10):
-        for color in mutate_color(start_color=self.get_pixels()[index], stop_color=next_color,
-                                  steps=steps):
+        for color in get_sine_transitions(start_color=self.get_pixels()[index],
+                                          stop_color=next_color, steps=steps):
             self[index] = color
 
     def __len__(self):
