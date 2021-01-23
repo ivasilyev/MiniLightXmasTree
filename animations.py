@@ -1,7 +1,7 @@
 from gc import collect
 from utime import sleep_ms
 from utils import flatten_2d_array
-from color_utils import BLACK, get_color_loop, get_sine_transitions
+from color_utils import BLACK, get_color_loop, validate_color
 from neo_rings import NeoRings, PixelsNotReadyThrowable
 
 
@@ -31,12 +31,13 @@ class Animations:
         sleep_ms(ms)
 
     def blink_single_smooth(self, index, color, background=BLACK, pause: int = 15):
-        _colors = get_sine_transitions(start_color=background, stop_color=color) + \
-                  get_sine_transitions(start_color=color, stop_color=background)
+        bg = self._pixels[index]
+        _colors = get_color_loop([bg, color])
         for _color in _colors:
             self._pixels[index] = _color
             self._pixels.write()
             self.pause(pause)
+        self._pixels[index] = bg
 
     def blink_single(self, index, color, background=BLACK, pause: int = 15):
         """

@@ -13,7 +13,11 @@ def get_random_color():
 
 
 def validate_color(color):
-    return [k if k < 256 else 255 for k in [j if j > 0 else 0 for j in [int(round(i)) for i in color]]]
+    if isinstance(color, str) and color == "random":
+        return get_random_color()
+    return tuple([k if k < 256 else 255 for k in
+                  [j if j > 0 else 0 for j in
+                   [int(round(i)) for i in color]]])
 
 
 def adjust_brightness(color, brightness: float):
@@ -51,13 +55,19 @@ def get_sine_transitions(start_color, stop_color, steps: int = 10):
 
 
 def get_color_loop(color_2d_array, steps: int = 10):
+    """
+    :param color_2d_array: List or tuple of colors. Random is allowed.
+    :param steps: Number of one-side transition steps
+    :return: Optimized list of transient colors where the last color is flowing back into the first
+    """
     out = []
     previous = None
-    for color in color_2d_array:
+    colors = [validate_color(i) for i in color_2d_array]
+    for color in colors:
         if previous:
             out.extend(get_sine_transitions(previous, color, steps)[:-1])
         previous = color
-    out.extend(get_sine_transitions(color_2d_array[-1], color_2d_array[0], steps))
+    out.extend(get_sine_transitions(colors[-1], colors[0], steps))
     return out
 
 
