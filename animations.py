@@ -1,7 +1,7 @@
 from gc import collect
 from utime import sleep_ms
 from utils import flatten_2d_array
-from color_utils import BLACK, get_color_loop
+from color_utils import BLACK, get_color_loop, get_sine_transitions
 from neo_rings import NeoRings, PixelsNotReadyThrowable
 
 
@@ -30,13 +30,20 @@ class Animations:
         collect()
         sleep_ms(ms)
 
-    def blink_single(self, color, index, background=BLACK, pause: int = 15):
+    def blink_single_smooth(self, index, color, background=BLACK, pause: int = 15):
+        _colors = get_sine_transitions(start_color=background, stop_color=color) + \
+                  get_sine_transitions(start_color=color, stop_color=background)
+        for _color in _colors:
+            self._pixels[index] = _color
+            self._pixels.write()
+            self.pause(pause)
+
+    def blink_single(self, index, color, background=BLACK, pause: int = 15):
         """
         Blinks a certain LED with the given color
         """
         if not self.is_enabled:
             return
-        self._pixels.fill(background)
         self._pixels[index] = color
         self._pixels.write()
         self.pause(pause)
@@ -54,7 +61,7 @@ class Animations:
             self._pixels.write()
             self.pause(pause)
 
-    def random_blink(self, colors, background=BLACK, pause: int = 15):
+    def random_blink(self, colors, background=BLACK, pause: int = 15, smooth: bool = False):
         """
         Blinks a random LED with the given colors
         """
@@ -65,7 +72,10 @@ class Animations:
         for color in colors:
             if not self.is_enabled:
                 return
-            self.blink_single(color, idx, background, pause)
+            if smooth:
+                self.blink_single_smooth(idx, color, background, pause)
+            else:
+                self.blink_single(idx, color, background, pause)
         self.state["random_blink_index"] = idx
 
     def bounce(self, color, pause: int = 60):
