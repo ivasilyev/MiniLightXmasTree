@@ -1,7 +1,7 @@
 from gc import collect
 from utime import sleep_ms
 from utils import flatten_2d_array
-from color_utils import BLACK, get_color_loop, validate_color
+from color_utils import BLACK, get_color_loop
 from neo_rings import NeoRings, PixelsNotReadyThrowable
 
 
@@ -30,7 +30,7 @@ class Animations:
         collect()
         sleep_ms(ms)
 
-    def blink_single_smooth(self, index, color, background=BLACK, pause: int = 15):
+    def blink_single_smooth(self, index, color, pause: int = 15):
         bg = self._pixels[index]
         _colors = get_color_loop([bg, color])
         for _color in _colors:
@@ -39,30 +39,32 @@ class Animations:
             self.pause(pause)
         self._pixels[index] = bg
 
-    def blink_single(self, index, color, background=BLACK, pause: int = 15):
+    def blink_single(self, index, color, pause: int = 15):
         """
         Blinks a certain LED with the given color
         """
         if not self.is_enabled:
             return
+        bg = self._pixels[index]
         self._pixels[index] = color
         self._pixels.write()
         self.pause(pause)
-        self._pixels[index] = background
+        self._pixels[index] = bg
 
-    def blink_all(self, colors, background=BLACK, pause: int = 15):
+    def blink_all(self, colors, pause: int = 15):
         """
         Blinks the whole strip with the given colors
         """
+        bg = self._pixels[0]
         for color in colors:
             if not self.is_enabled:
                 return
-            self._pixels.fill(background)
+            self._pixels.fill(bg)
             self._pixels.fill(color)
             self._pixels.write()
             self.pause(pause)
 
-    def random_blink(self, colors, background=BLACK, pause: int = 15, smooth: bool = False):
+    def random_blink(self, colors, pause: int = 15, smooth: bool = False):
         """
         Blinks a random LED with the given colors
         """
@@ -74,9 +76,9 @@ class Animations:
             if not self.is_enabled:
                 return
             if smooth:
-                self.blink_single_smooth(idx, color, background, pause)
+                self.blink_single_smooth(idx, color, pause)
             else:
-                self.blink_single(idx, color, background, pause)
+                self.blink_single(idx, color, pause)
         self.state["random_blink_index"] = idx
 
     def bounce(self, color, pause: int = 60):
