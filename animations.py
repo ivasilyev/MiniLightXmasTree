@@ -1,4 +1,5 @@
 from gc import collect
+from random import choice
 from utime import sleep_ms
 from utils import flatten_2d_array
 from color_utils import BLACK, get_color_loop
@@ -32,7 +33,7 @@ class Animations:
 
     def blink_single_smooth(self, index, color, pause: int = 15):
         bg = self._pixels[index]
-        _colors = get_color_loop([bg, color])
+        _colors = get_color_loop([bg, color], steps=25)
         for _color in _colors:
             self._pixels[index] = _color
             self._pixels.write()
@@ -64,14 +65,15 @@ class Animations:
             self._pixels.write()
             self.pause(pause)
 
-    def random_blink(self, colors, pause: int = 15, smooth: bool = False):
+    def random_blink(self, colors, background=BLACK, pause: int = 15, smooth: bool = False):
         """
         Blinks a random LED with the given colors
         """
-        from random import choice
         idx = choice(self._pixels.range)
-        while idx == self.state.get("random_blink_index"):
+        k = "random_blink_index"
+        while idx == self.state.get(k):
             idx = choice(self._pixels.range)
+        self.state[k] = idx
         for color in colors:
             if not self.is_enabled:
                 return
@@ -79,7 +81,7 @@ class Animations:
                 self.blink_single_smooth(idx, color, pause)
             else:
                 self.blink_single(idx, color, pause)
-        self.state["random_blink_index"] = idx
+        self._pixels[idx] = background
 
     def bounce(self, color, pause: int = 60):
         for i in range(4 * len(self._pixels)):
