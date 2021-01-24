@@ -68,12 +68,6 @@ class NeoRings(NeoPixel):
         super().__setitem__(index, c)
         self._apply()
 
-    def alter(self, index, next_color, steps: int = 10, pause: int = 10):
-        for color in get_sine_transitions(start_color=self.get_pixels()[index],
-                                          stop_color=next_color, steps=steps):
-            self[index] = color
-            sleep_ms(pause)
-
     def __len__(self):
         return self.n
 
