@@ -14,4 +14,5 @@ for FILE in __init__.py \
     echo "Copy ${FILE}"
     ampy put "${FILE}"
   done
-echo "Done"
+echo "Done, soft reboot"
+ampy reset
