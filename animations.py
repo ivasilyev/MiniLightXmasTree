@@ -152,7 +152,8 @@ class Animations:
             self.pause(pause)
 
     def pulse(self, colors, pause: int = 20):
-        _colors = get_color_loop(flatten_2d_array([[i, BLACK] for i in colors]), steps=20)
+        bg = self._pixels[0]
+        _colors = get_color_loop(flatten_2d_array([[bg, i] for i in colors]), steps=20)
         for color in _colors:
             if not self.is_enabled:
                 return
