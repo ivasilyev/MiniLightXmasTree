@@ -8,11 +8,12 @@ for FILE in __init__.py \
     config.json \
     main.py \
     neo_rings.py \
+    reboot.py \
     sensor_controller.py \
     utils.py
   do
     echo "Copy ${FILE}"
     ampy put "${FILE}"
   done
-echo "Done, soft reboot"
-ampy reset
+echo "Done, rebooting"
+ampy --delay 10 run reboot.py
