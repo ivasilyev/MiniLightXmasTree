@@ -4,6 +4,10 @@ from utime import sleep_ms
 from utils import flatten_2d_array
 from color_utils import BLACK, get_color_loop
 from neo_rings import NeoRings, PixelsNotReadyThrowable
+try:
+    import uasyncio as asyncio
+except ImportError:
+    import asyncio
 
 
 class Animations:
@@ -27,9 +31,13 @@ class Animations:
         return self._pixels
 
     @staticmethod
-    def pause(ms: int):
-        collect()
-        sleep_ms(ms)
+    async def _pause(ms: int):
+        await asyncio.sleep_ms(ms)
+
+    def pause(self, ms: int):
+        if ms > 100:
+            collect()
+        asyncio.run(self._pause(ms))
 
     def blink_single_smooth(self, index, color, pause: int = 15):
         bg = self._pixels[index]
