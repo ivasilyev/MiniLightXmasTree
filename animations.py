@@ -39,9 +39,9 @@ class Animations:
             collect()
         asyncio.run(self._pause(ms))
 
-    def blink_single_smooth(self, index, color, pause: int = 15):
+    def blink_single_smooth(self, index, color, pause: int = 15, steps: int = 50):
         bg = self._pixels[index]
-        _colors = get_color_loop([bg, color], steps=25)
+        _colors = get_color_loop([bg, color], steps=steps)
         for _color in _colors:
             self._pixels[index] = _color
             self._pixels.write()
@@ -73,7 +73,8 @@ class Animations:
             self._pixels.write()
             self.pause(pause)
 
-    def random_blink(self, colors, background=BLACK, pause: int = 15, smooth: bool = False):
+    def random_blink(self, colors, background=BLACK, pause: int = 15, smooth: bool = False,
+                     steps: int = 50):
         """
         Blinks a random LED with the given colors
         """
@@ -86,7 +87,7 @@ class Animations:
             if not self.is_enabled:
                 return
             if smooth:
-                self.blink_single_smooth(idx, color, pause)
+                self.blink_single_smooth(idx, color, pause, steps)
             else:
                 self.blink_single(idx, color, pause)
         self._pixels[idx] = background
@@ -151,9 +152,9 @@ class Animations:
             self._pixels.write()
             self.pause(pause)
 
-    def pulse(self, colors, pause: int = 20):
+    def pulse(self, colors, pause: int = 20, steps: int = 50):
         bg = self._pixels[0]
-        _colors = get_color_loop(flatten_2d_array([[bg, i] for i in colors]), steps=20)
+        _colors = get_color_loop(flatten_2d_array([[bg, i] for i in colors]), steps=steps)
         for color in _colors:
             if not self.is_enabled:
                 return
