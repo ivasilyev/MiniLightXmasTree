@@ -43,10 +43,11 @@ class Animations:
     def blink_single_smooth(self, index, color, pause: int = 15, steps: int = 50):
         bg = self._pixels[index]
         _colors = get_color_loop([bg, color], steps=steps)
+        _pause = round(float(pause) / float(steps))
         for _color in _colors:
             self._pixels[index] = _color
             self._pixels.write()
-            self.pause(pause)
+            self.pause(_pause)
         self._pixels[index] = bg
 
     def blink_single(self, index, color, pause: int = 15):
