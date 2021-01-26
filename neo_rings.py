@@ -2,6 +2,7 @@ from gc import collect
 from machine import Pin
 from utime import sleep_ms
 from neopixel import NeoPixel
+from collections import OrderedDict
 from utils import flatten_nd_array
 from color_utils import BLACK, adjust_brightness, get_random_color, get_sine_transitions, validate_color
 
@@ -40,7 +41,7 @@ class NeoRings(NeoPixel):
         return out
 
     def get_pixels(self):
-        return {k: self.__getitem__(k) for k in self.range}
+        return OrderedDict([(i, self.__getitem__(i)) for i in self.range])
 
     def _validate_args(self):
         if self.brightness > 1.:
