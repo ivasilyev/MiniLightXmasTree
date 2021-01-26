@@ -37,7 +37,8 @@ class Animations:
     def pause(self, ms: int):
         if ms > 100:
             collect()
-        asyncio.run(self._pause(ms))
+        # asyncio.run(self._pause(ms))
+        sleep_ms(ms)
 
     def blink_single_smooth(self, index, color, pause: int = 15, steps: int = 50):
         bg = self._pixels[index]
@@ -165,7 +166,7 @@ class Animations:
     def chase(self, colors, reverse: bool = False, pause: int = 20):
         _colors = list(self._pixels.get_pixels().values())[::-1]
         for color in colors + _colors:
-            self._pixels.push(color)
+            self._pixels.push(color, reverse)
             self._pixels.write()
             self.pause(pause)
 

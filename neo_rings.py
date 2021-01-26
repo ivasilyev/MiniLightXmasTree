@@ -92,9 +92,13 @@ class NeoRings(NeoPixel):
             self[idx] = color
         self._apply()
 
-    def push(self, color):
-        pixels = OrderedDict([(k, j) for k, j in zip(
-            self.range, [color] + [self.__getitem__(i) for i in self.range][:-1])])
+    def push(self, color, reverse: bool = False):
+        if reverse:
+            pixels = OrderedDict([(k, j) for k, j in zip(
+                self.range, [self.__getitem__(i) for i in self.range][1:] + [color])])
+        else:
+            pixels = OrderedDict([(k, j) for k, j in zip(
+                self.range, [color] + [self.__getitem__(i) for i in self.range][:-1])])
         self.set_pixels(pixels)
 
     def blacken(self):
