@@ -8,7 +8,6 @@ for FILE in __init__.py \
     config.json \
     main.py \
     neo_rings.py \
-    reboot.py \
     sensor_controller.py \
     utils.py
   do
@@ -16,4 +15,4 @@ for FILE in __init__.py \
     ampy put "${FILE}"
   done
 echo "Done, rebooting"
-ampy --delay 10 run reboot.py
+ampy reset
