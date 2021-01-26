@@ -10,11 +10,12 @@ except ImportError:
 
 
 class SensorController:
-    def __init__(self, pin: int, pause: int = 1):
+    def __init__(self, pin: int, pause: int = 1, verbose: bool = False):
         self._pin = pin
         self._temperature_sensor = DS18X20(OneWire(Pin(pin)))
         self._temperature_chips = self._temperature_sensor.scan()
         self.pause = pause
+        self.is_verbose = verbose
         self.state = dict(temperature=dict())
         print("The sensor controller module started")
 
@@ -30,7 +31,8 @@ class SensorController:
                     self.state["temperature"][chip_id] = chip_data
                 except:  # CRC error
                     continue
-            print(self.state["temperature"])
+            if self.is_verbose:
+                print(self.state["temperature"])
             await asyncio.sleep(self.pause)
 
     def run(self):
