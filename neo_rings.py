@@ -43,6 +43,14 @@ class NeoRings(NeoPixel):
     def get_pixels(self):
         return OrderedDict([(i, self.__getitem__(i)) for i in self.range])
 
+    def set_pixels(self, pixels: dict):
+        # {pixel: (color), }
+        assert all(i in self.range for i in pixels.keys())
+        for pixel in pixels:
+            if not self.is_enabled:
+                return
+            self.__setitem__(pixel, validate_color(pixels[pixel]))
+
     def _validate_args(self):
         if self.brightness > 1.:
             raise ValueError("The brightness coefficient cannot be greater than 1!")
@@ -83,6 +91,11 @@ class NeoRings(NeoPixel):
                 return
             self[idx] = color
         self._apply()
+
+    def push(self, color):
+        pixels = OrderedDict([(k, j) for k, j in zip(
+            self.range, [color] + [self.__getitem__(i) for i in self.range][:-1])])
+        self.set_pixels(pixels)
 
     def blacken(self):
         # An ultimate directive
