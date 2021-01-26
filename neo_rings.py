@@ -4,7 +4,7 @@ from utime import sleep_ms
 from neopixel import NeoPixel
 from collections import OrderedDict
 from utils import flatten_nd_array
-from color_utils import BLACK, adjust_brightness, get_random_color, get_sine_transitions, validate_color
+from color_utils import BLACK, adjust_brightness, get_random_color, validate_color
 
 
 class PixelsNotReadyThrowable(Exception):

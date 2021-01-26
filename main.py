@@ -12,7 +12,7 @@ def main():
     animation_controller = AnimationController(animations)
     _thread.start_new_thread(animation_controller.run, ())
 
-    sensor_controller = SensorController(pin=14, polling_interval=1)
+    sensor_controller = SensorController(14)
     _thread.start_new_thread(sensor_controller.run, ())
 
     # animation_controller.set_animation("random_blink", colors=("random",), pause=50)
