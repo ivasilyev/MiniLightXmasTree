@@ -162,6 +162,13 @@ class Animations:
             self._pixels.write()
             self.pause(pause)
 
+    def chase(self, colors, reverse: bool = False, pause: int = 20):
+        _colors = list(self._pixels.get_pixels().values())[::-1]
+        for color in colors + _colors:
+            self._pixels.push(color)
+            self._pixels.write()
+            self.pause(pause)
+
     def fade(self):
         for i in range(0, 4 * 256, 8):
             for j in self._pixels.range:
