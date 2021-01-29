@@ -5,20 +5,35 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-        <title>Mini Light Christmas Tree </title>
+        <title>Mini Light Christmas Tree</title>
 
         <link rel="icon" type="image/png" href="./favicon.png" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.css"
               rel="stylesheet" crossorigin="anonymous">
+
     </head>
-    <body>
+    <body class="bg-light">
         <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div>
-            <h1>Light control panel</h1>
-        </div>
-        <div>
-            <form id="" name="">
+
+        <div class="container">
+            <div class="py-5 text-center">
+                <h2>Mini Light Christmas Tree</h2>
+                <h3>Control panel</h3>
+                <p class="lead"></p>
+            </div>
+            <form class="needs-validation" novalidate="" id="" name="">
                 <fieldset>
+                    <div class="order-md-1">
+                        <div class="row">
+                            <label for="animation_dropdown">Select an animation:</label>
+                            <select class="custom-select d-block w-100" id="animation_dropdown" required>
+                                <option selected disabled value="">Select...</option>
+                                <option value="random_blink">random_blink</option>
+                                <option value="bounce2">bounce2</option>
+                                <option value="cycle2">cycle2</option>
+                            </select>
+                        </div>
+                    </div>
                 </fieldset>
             </form>
         </div>
