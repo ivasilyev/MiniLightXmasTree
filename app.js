@@ -10,7 +10,7 @@ class App extends React.Component {
             <div class="container">
                 <div class="py-5 text-center">
                     <h2>Mini Light Christmas Tree</h2>
-                    <h3>Control panel</h3>
+                    <h4>Control panel</h4>
                     <p class="lead"></p>
                 </div>
                 <form class="needs-validation" novalidate="" id="" name="">
