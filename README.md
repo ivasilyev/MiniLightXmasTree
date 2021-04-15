@@ -1,3 +1,7 @@
+# MiniLightXmasTree
+
+Here I'm making a sort of new version for my former project.
+
 # Installation requirements for ESP32-WROVER
 
 ## Install `esptool`
